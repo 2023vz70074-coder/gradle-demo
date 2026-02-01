@@ -1,8 +1,26 @@
+/////////////////////////////////////////
+// 1️⃣ Buildscript must be first
+/////////////////////////////////////////
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:5.5.0"
+    }
+}
+
+/////////////////////////////////////////
+// 2️⃣ Plugins block comes next
+/////////////////////////////////////////
 plugins {
     id 'java'
     id 'jacoco'
 }
 
+/////////////////////////////////////////
+// 3️⃣ Project config
+/////////////////////////////////////////
 group = 'com.bits.mvn'
 version = '1.0.0'
 
@@ -41,16 +59,7 @@ jacocoTestReport {
     }
 }
 
-//////////////////////////////////////
-// SonarQube plugin setup
-//////////////////////////////////////
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:5.5.0"
-    }
-}
-
+/////////////////////////////////////////
+// 4️⃣ Apply SonarQube plugin
+/////////////////////////////////////////
 apply plugin: "org.sonarqube"
