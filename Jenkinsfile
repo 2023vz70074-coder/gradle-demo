@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        SONAR_TOKEN = credentials('sonar-token')
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -19,14 +15,11 @@ pipeline {
             }
         }
 
-        stage('SonarQube Scan') {
+        stage('SonarQube Analysis') {
             steps {
-                sh(script: """
-                    ./gradlew sonarqube \
-                    -Dsonar.projectKey=gradle-demo \
-                    -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.login=$SONAR_TOKEN
-                """)
+                withSonarQubeEnv('MySonarQubeServer') {
+                    sh './gradlew sonarqube'
+                }
             }
         }
 
