@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'jacoco'
-    id "org.sonarqube" version "5.5.0"
 }
 
 group = 'com.bits.mvn'
@@ -24,7 +23,6 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
 }
 
-
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
@@ -42,3 +40,17 @@ jacocoTestReport {
         csv.required = false
     }
 }
+
+//////////////////////////////////////
+// SonarQube plugin setup
+//////////////////////////////////////
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:5.5.0"
+    }
+}
+
+apply plugin: "org.sonarqube"
