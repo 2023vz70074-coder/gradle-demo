@@ -2,11 +2,10 @@ pipeline {
     agent any
 
     environment {
-        SONAR_TOKEN = credentials('sonar-token')
+        SONAR_TOKEN = credentials('sonar-token') // Your SonarQube token in Jenkins
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -22,12 +21,12 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                sh """
-                ./gradlew sonarqube \
-                -Dsonar.projectKey=gradle-demo \
-                -Dsonar.host.url=http://localhost:9000 \
-                -Dsonar.login=${SONAR_TOKEN}
-                """
+                sh(script: """
+                    ./gradlew sonarqube \
+                    -Dsonar.projectKey=gradle-demo \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.login=$SONAR_TOKEN
+                """)
             }
         }
 
