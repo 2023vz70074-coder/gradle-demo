@@ -7,11 +7,14 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Build & Test') {
             steps {
-                bat 'gradle clean build'
+                sh 'chmod +x gradlew'
+                sh './gradlew clean build'
             }
         }
+
         stage('Archive Artifact') {
             steps {
                 archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
