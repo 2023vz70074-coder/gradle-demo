@@ -15,6 +15,12 @@ pipeline {
             }
         }
 
+        stage('Clear Gradle Cache') {
+            steps {
+                sh 'rm -rf ~/.gradle/caches/'
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 sh './gradlew sonarqube'
