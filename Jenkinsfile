@@ -5,11 +5,11 @@ pipeline {
         GRADLE_VERSION = "8.7"
         GRADLE_HOME = "${env.WORKSPACE}/gradle-${GRADLE_VERSION}"
         PATH = "${GRADLE_HOME}/bin:${env.PATH}"
-        // IMPORTANT: Replace this with your actual SonarQube Private IP
         SONAR_URL = "http://localhost:9000" 
     }
 
     stages {
+
         stage('Install Gradle') {
             steps {
                 sh '''
@@ -32,7 +32,6 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh '''
-                    cd app
                     gradle clean build
                 '''
             }
@@ -42,9 +41,6 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
                     sh '''
-                        cd app
-                        # -Dsonar.gradle.skipCompile=true prevents the deprecation warning
-                        # --no-configuration-cache prevents the Gradle 8.7 error
                         gradle sonar \
                           -Dsonar.host.url=${SONAR_URL} \
                           -Dsonar.login=${SONAR_AUTH_TOKEN} \
@@ -57,7 +53,7 @@ pipeline {
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'app/build/libs/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
             }
         }
     }
