@@ -11,25 +11,23 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh 'chmod +x gradlew'
-                sh './gradlew clean build'
-            }
-        }
-
-        stage('Clear Gradle Cache') {
-            steps {
-                sh 'rm -rf ~/.gradle/caches/'
+                // This generates the build artifacts and the Jacoco XML report
+                sh './gradlew clean build jacocoTestReport'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                sh './gradlew sonarqube'
+                // 'sonar-server' must match the name in Jenkins Global Config
+                withSonarQubeEnv('sonar-server') {
+                    sh './gradlew sonarqube'
+                }
             }
         }
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'build/libs/*.jar', allowEmptyArchive: true
             }
         }
     }
